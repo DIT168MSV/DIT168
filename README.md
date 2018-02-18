@@ -3,7 +3,7 @@ Industrial IT and Embedded Systems
 
 ## Getting Started
 
-Follows these steps to clone and run the program
+Follows these steps to clone, build and run the program
 
 ## Cloning
 

@@ -1,3 +1,0 @@
-/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/build/CMakeFiles/rebuild_cache.dir
-/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/build/CMakeFiles/oddEven.dir
-/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/build/CMakeFiles/edit_cache.dir

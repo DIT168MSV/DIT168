@@ -1,1 +1,0 @@
-/usr/bin/c++   -Wall -Wextra -Werror  -rdynamic CMakeFiles/oddEven.dir/oddEven.cpp.o CMakeFiles/oddEven.dir/oddEvenChecker.cpp.o  -o oddEven 

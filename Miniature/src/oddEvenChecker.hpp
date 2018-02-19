@@ -1,6 +1,6 @@
 #ifndef ODDEVEN
 #define ODDEVEN
-#<sctdint>
+#include <cstdint>
 
 class OddEvenChecker {
     public : 

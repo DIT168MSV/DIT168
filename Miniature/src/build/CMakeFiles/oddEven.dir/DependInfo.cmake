@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/kundananji/Documents/DIT168/Miniature/src/oddEven.cpp" "/home/kundananji/Documents/DIT168/Miniature/src/build/CMakeFiles/oddEven.dir/oddEven.cpp.o"
-  "/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.cpp" "/home/kundananji/Documents/DIT168/Miniature/src/build/CMakeFiles/oddEven.dir/oddEvenChecker.cpp.o"
+  "/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/oddEven.cpp" "/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/build/CMakeFiles/oddEven.dir/oddEven.cpp.o"
+  "/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/oddEvenChecker.cpp" "/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/build/CMakeFiles/oddEven.dir/oddEvenChecker.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

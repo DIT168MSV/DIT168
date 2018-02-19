@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/kundananji/Documents/DIT168/Miniature/src/oddEven.cpp
+/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/oddEven.cpp
 iostream
 -
 oddEvenChecker.hpp
-/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.hpp
+/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/oddEvenChecker.hpp
 
-/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.cpp
+/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/oddEvenChecker.cpp
 oddEvenChecker.hpp
-/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.hpp
+/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/oddEvenChecker.hpp
 
-/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.hpp
+/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/oddEvenChecker.hpp
 cstdint
 -
 

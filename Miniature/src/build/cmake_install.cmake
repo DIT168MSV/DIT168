@@ -1,4 +1,4 @@
-# Install script for directory: /home/kundananji/Documents/DIT168/Miniature/src
+# Install script for directory: /media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/kundananji/Documents/DIT168/Miniature/src/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/media/markus/Windows/Users/marku/CLionProjects/DIT168/Miniature/src/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

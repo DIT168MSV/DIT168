@@ -1,19 +1,13 @@
-How to contribute
-
-================= 
-
-
+##How to contribute
+================================================
 
 ## Getting started 
 
 - Make sure you have a Github account
 
-
 - Conntact any of the contributors by email or other means.
 
 ## Making changes
-
-
 
 - Fork the repository, make changes or fix a problem, commit and send a pull request.
 - Update the issue list if any bugs is noticed

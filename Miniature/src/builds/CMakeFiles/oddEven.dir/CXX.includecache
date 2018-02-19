@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/kundananji/Documents/DIT168/Miniature/src/oddEven.cpp
+iostream
+-
+oddEvenChecker.hpp
+/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.hpp
+cluon/UDPSender.hpp
+/home/kundananji/Documents/DIT168/Miniature/src/cluon/UDPSender.hpp
+chrono
+-
+cluon/UDPReceiver.hpp
+/home/kundananji/Documents/DIT168/Miniature/src/cluon/UDPReceiver.hpp
+
+/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.cpp
+oddEvenChecker.hpp
+/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.hpp
+
+/home/kundananji/Documents/DIT168/Miniature/src/oddEvenChecker.hpp
+cstdint
+-
+

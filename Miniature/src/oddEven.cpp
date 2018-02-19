@@ -4,7 +4,6 @@
 #include <chrono>
 #include "cluon/UDPReceiver.hpp"
 
-
 int main(int /*argc*/, char** /*argv*/){
     OddEvenChecker n;
     std::cout<< "The  number is "<< n.isEven(6) << std::endl;
@@ -21,5 +20,4 @@ int main(int /*argc*/, char** /*argv*/){
     while (receiver.isRunning()) {
         std::this_thread::sleep_for(1s);
     }
-    return 0;
 }

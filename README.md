@@ -1,4 +1,5 @@
-# DIT168
+DIT168
+======
 Industrial IT and Embedded Systems project
 
 ## About this project
@@ -13,8 +14,7 @@ Follows these steps to clone, build and run the program
 
 ## Cloning
 
-Simply clone our git repository by running this command into your terminal assuming that git is installed.
-Otherwise go here and follow the commands [![Git](https://git-scm.com/downloads)](https://git-scm.com/downloads).
+Clone the repository by running git clone in your desired directory: 
 
 ```
 git clone https://github.com/DIT168MSV/DIT168.git
@@ -22,21 +22,35 @@ git clone https://github.com/DIT168MSV/DIT168.git
 
 ## Building and running the program
 
-Start by creating a folder in the src folder (i.e mkdir build) in order to compile the cmakelist.txt then you automate
-the compilation by calling make in that folder. Change directory to the build folder run cmake there as in the example
-below. At last run the program oddEven.
+1. Make a new directory in the src folder called build:
 
 ```
 cd Miniature/src
 mkdir build
-cd build
-cmake ..
-make
-./ oddEven
 ```
+2. Navigate to that directory:
+```
+cd build
+```
+3. Call cmake to set up the automated compiling:
+```
+cmake ..
+```
+4. Call make to build and compile the program:
+```
+make
+```
+5. Run the receiver cxx:
+```
+./receiver
+```
+6. Open a new terminal window, navigate to your build folder, and run the sender cxx:
+```
+./sender
+```
+7. Test the program communication by using sender to send numbers to the receiver.
 
 ## Github layout
 
 - We have a master branch were we will add code when we tested it and made sure it follows our quality standards.
-- We have a development branch for testing, debugging and implementation of new features. In this branch we shall
-perform pull request to make sure code quality is high in the branch.
+- We have a development branch for testing, debugging and implementation of new features. In this branch we perform pull request to make sure code quality is high in the branch.

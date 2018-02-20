@@ -9,6 +9,8 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y install docker-ce
 
+language: cpp
+
 script:
   - docker build -t dit168.travis -f Dockerfile .
 

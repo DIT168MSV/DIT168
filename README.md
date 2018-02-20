@@ -27,6 +27,7 @@ the compilation by calling make in that folder. Change directory to the build fo
 below. At last run the program oddEven.
 
 ```
+cd Miniature/src
 mkdir build
 cd build
 cmake ..

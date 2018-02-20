@@ -1,3 +1,0 @@
-/home/kundananji/Documents/DIT168/Miniature/src/builds/CMakeFiles/rebuild_cache.dir
-/home/kundananji/Documents/DIT168/Miniature/src/builds/CMakeFiles/edit_cache.dir
-/home/kundananji/Documents/DIT168/Miniature/src/builds/CMakeFiles/oddEven.dir

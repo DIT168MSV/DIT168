@@ -2,3 +2,9 @@ build_dir
 debian
 tmp*
 build/
+build_dir
+debian
+tmp*
+builds/
+.DS_Store
+

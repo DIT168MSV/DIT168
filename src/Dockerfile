@@ -11,6 +11,7 @@ RUN apk update && \
 
 ADD . /opt/sources
 WORKDIR /opt/sources
+# "dit168" comes from project($PROJECT_NAME) in CMakeLists.txt
 RUN cd /opt/sources && \
     mkdir build && \
     cd build && \

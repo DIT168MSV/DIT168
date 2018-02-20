@@ -1,0 +1,20 @@
+sudo: true
+dist: trusty
+
+language: cpp
+
+before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y install docker-ce
+
+script:
+  - docker build -t dit168.travis -f Dockerfile .
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
+    docker tag dit168.travis $DOCKER_USERNAME/dit168.travis:latest;
+    docker push $DOCKER_USERNAME/dit168.travis:latest;
+fi

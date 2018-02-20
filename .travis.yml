@@ -12,7 +12,7 @@ before_install:
 language: cpp
 
 script:
-  - docker build -t dit168.travis -f Dockerfile .
+  - docker build -t dit168.travis -f src/Dockerfile .
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then

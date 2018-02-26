@@ -25,7 +25,7 @@ git clone https://github.com/DIT168MSV/DIT168.git
 1. Make a new directory in the src folder called build:
 
 ```
-cd Miniature/src
+cd src
 mkdir build
 ```
 2. Navigate to that directory:
@@ -42,11 +42,11 @@ make
 ```
 5. Run the receiver cxx:
 ```
-./receiver
+./dit168.Receiver
 ```
 6. Open a new terminal window, navigate to your build folder, and run the sender cxx:
 ```
-./sender
+./dit168.Sender
 ```
 7. Test the program communication by using sender to send numbers to the receiver.
 

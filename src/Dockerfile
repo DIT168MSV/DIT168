@@ -13,7 +13,7 @@ ADD . /opt/sources
 WORKDIR /opt/sources
 # "dit168" comes from project($PROJECT_NAME) in CMakeLists.txt
 RUN cd /opt/sources && \
-    ls && \
+    cd src && \
     mkdir build && \
     cd build && \
     cmake -D CMAKE_BUILD_TYPE=Release .. && \

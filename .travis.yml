@@ -1,6 +1,7 @@
-language: cpp
 sudo: true
 dist: trusty
+
+language: cpp
 
 before_install:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -16,4 +17,4 @@ after_success:
     docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
     docker tag dit168.travis $DOCKER_USERNAME/dit168.travis:latest;
     docker push $DOCKER_USERNAME/dit168.travis:latest;
-fi
+    fi

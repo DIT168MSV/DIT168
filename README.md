@@ -1,3 +1,5 @@
+![build status on master](https://travis-ci.org/DIT168MSV/DIT168.svg?branch=master)
+
 DIT168
 ======
 Industrial IT and Embedded Systems project
@@ -50,7 +52,15 @@ make
 ```
 7. Test the program communication by using sender to send numbers to the receiver.
 
+### Docker build
+
+Docker build should be built from outside the source folder:
+```
+docker build -t dit168.local -f src/Dockerfile .
+```
+
 ## Github layout
 
 - We have a master branch were we will add code when we tested it and made sure it follows our quality standards.
 - We have a development branch for testing, debugging and implementation of new features. In this branch we perform pull request to make sure code quality is high in the branch.
+

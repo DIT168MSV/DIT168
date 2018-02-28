@@ -57,6 +57,7 @@ make
 Docker build should be built from outside the source folder:
 ```
 docker build -t dit168.local -f src/Dockerfile .
+docker build -t dit168.local-armhf -f src/Dockerfile.armhf .
 ```
 
 ## Github layout

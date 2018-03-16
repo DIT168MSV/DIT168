@@ -1,4 +1,7 @@
 ![build status on master](https://travis-ci.org/DIT168MSV/DIT168.svg?branch=master)
+[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://raw.githubusercontent.com/chrberger/libcluon/master/LICENSE [![Alpine (x86_64)](https://img.shields.io/badge/Alpine-x86__64-blue.svg
+)](https://github.com/chrberger/libcluon/blob/gh-pages/alpine/v3.7/x86_64/Dockerfile#L19) [![Alpine (armhf)](https://img.shields.io/badge/Alpine-armhf-blue.svg
+)](https://github.com/chrberger/libcluon/blob/gh-pages/alpine/v3.7/armhf/Dockerfile#L25)
 
 DIT168
 ======
@@ -64,4 +67,9 @@ docker build -t dit168.local-armhf -f src/Dockerfile.armhf .
 
 - We have a master branch were we will add code when we tested it and made sure it follows our quality standards.
 - We have a development branch for testing, debugging and implementation of new features. In this branch we perform pull request to make sure code quality is high in the branch.
+
+## License
+
+* Beause our project is supported by Libluon libraries which uses GNU lisence, This project is released under the terms of the GNU GPLv3 License - [![License: GPLv3](https://img.shields.io/badge/license-GPL--3-blue.svg
+)](https://www.gnu.org/licenses/gpl-3.0.txt)
 

@@ -20,7 +20,7 @@ RUN cd /opt/sources && \
     mkdir build && \
     cd build && \
     cmake -D CMAKE_BUILD_TYPE=Release .. && \
-    make && cp example /tmp
+    make example && cp example /tmp
 RUN [ "cross-build-end" ]
 
 # Deploy

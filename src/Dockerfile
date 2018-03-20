@@ -10,6 +10,7 @@ RUN apk update && \
 ADD . /opt/sources
 WORKDIR /opt/sources
 RUN cd /opt/sources && \
+    cd src && \
     mkdir build && \
     cd build && \
     cmake -D CMAKE_BUILD_TYPE=Release .. && \

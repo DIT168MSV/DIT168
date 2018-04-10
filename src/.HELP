@@ -1,0 +1,3 @@
+Run with: ./autorun.sh [OPTIONS]
+-r      --run       builds, transfers and runs the image on the car
+-s      --soft      soft run, only builds and transfers but no execution

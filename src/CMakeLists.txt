@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.2)
-project(example)
+
+project(MSV)
+
 set(CMAKE_CXX_STANDARD 14)
 
 find_package(libcluon REQUIRED)
@@ -10,7 +12,11 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/messages.cpp
                    COMMAND cluon-msc --cpp-sources --cpp-add-include-file=messages.hpp --out=${CMAKE_BINARY_DIR}/messages.cpp ${CMAKE_CURRENT_SOURCE_DIR}/messages.odvd
                    COMMAND cluon-msc --cpp-headers --out=${CMAKE_BINARY_DIR}/messages.hpp ${CMAKE_CURRENT_SOURCE_DIR}/messages.odvd
                    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/messages.odvd)
+
 include_directories(SYSTEM ${CMAKE_BINARY_DIR})
 
-add_executable(${PROJECT_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/Example.cpp ${CMAKE_BINARY_DIR}/messages.cpp)
-target_link_libraries(${PROJECT_NAME} ${CLUON_LIBRARIES})
+add_executable(${PROJECT_NAME}.Main ${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp ${CMAKE_BINARY_DIR}/messages.cpp)
+target_link_libraries(${PROJECT_NAME}.Main ${CLUON_LIBRARIES})
+
+add_executable(${PROJECT_NAME}.RC ${CMAKE_CURRENT_SOURCE_DIR}/RC.cpp ${CMAKE_BINARY_DIR}/messages.cpp)
+target_link_libraries(${PROJECT_NAME}.RC ${CLUON_LIBRARIES})

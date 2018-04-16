@@ -11,8 +11,8 @@
 
 int main(int /*argc*/, char** /*argv*/) {
 
-    uint16_t const In_CID = 111;
-    uint16_t const Ex_CID = 112;
+    uint16_t const In_CID = 191;
+    uint16_t const Ex_CID = 192;
 
     std::shared_ptr<cluon::OD4Session> incom, excom;
 

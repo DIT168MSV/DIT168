@@ -6,7 +6,7 @@ services:
         restart: always
         volumes:
         - .:/opt/miniature.data
-        command: "/opt/od4/bin/odsupercomponent --cid=191 --verbose=1 --configuration=/opt/miniature.data/configuration"
+        command: "/opt/od4/bin/odsupercomponent --cid=191 --verbose=1 --configuration=/opt/miniature.data/conf$
 
     proxy-miniature-pwm-motor:
         image: seresearch/2018-dit-168:v0.3.5-armhf
@@ -20,11 +20,26 @@ services:
         - /dev/:/dev/
         command: "/opt/opendlv.miniature/bin/opendlv-proxy-miniature-pwm-motor --cid=191 --freq=50 --id=1"
 
+    device-ultrasonic-srf08-front:
+        image: chalmersrevere/opendlv-device-ultrasonic-srf08-armhf:v0.0.6
+        network_mode: "host"
+        privileged: true
+        volumes:
+          - /dev/i2c-1:/dev/i2c-1
+        command: "/usr/bin/opendlv-device-ultrasonic-srf08 --dev=/dev/i2c-1 --bus-address=112 --cid=191 --freq$
+
+    opendlv-signal-viewer:
+        image: signal:test
+        network_mode: "host"
+        restart: always
+        command: "/usr/bin/opendlv-signal-viewer -p 8080:8081 --cid=191"
+
     # Your microservice.
     MSV.Main:
         image: autobuild:armhf
         depends_on:
         - proxy-miniature-pwm-motor
         network_mode: "host"
-        restart: always # maybe running only once is enough?
-        command: "/opt/example --cid=191 --freq=10"
+        restart: always
+        command: "/opt/MSV.Main --cid=191 --freq=10 --id=2"
+

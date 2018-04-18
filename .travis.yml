@@ -15,9 +15,6 @@ script:
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker tag dit168.travis $DOCKER_USERNAME/dit168.travis:latest;
-    docker push $DOCKER_USERNAME/dit168.travis:latest;
-    docker tag dit168.travis-armhf $DOCKER_USERNAME/dit168.travis:latest-armhf;
-    docker push $DOCKER_USERNAME/dit168.travis:latest-armhf;
+    rm docker-latest.tar
+    docker save dit168.travis:latest > docker-latest.tar
     fi

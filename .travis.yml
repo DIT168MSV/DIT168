@@ -10,14 +10,8 @@ before_install:
   - sudo apt-get -y install docker-ce
 
 script:
-  - docker build -t dit168.travis -f src/Dockerfile .
-  - docker build -t dit168.travis-armhf -f src/Dockerfile.armhf .
+  - cd src
+  - docker build -t dit168.travis-armhf -f Dockerfile.armhf .
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD";
-    docker tag dit168.travis $DOCKER_USERNAME/dit168.travis:latest;
-    docker push $DOCKER_USERNAME/dit168.travis:latest;
-    docker tag dit168.travis-armhf $DOCKER_USERNAME/dit168.travis:latest-armhf;
-    docker push $DOCKER_USERNAME/dit168.travis:latest-armhf;
-    fi
+  - echo "success"

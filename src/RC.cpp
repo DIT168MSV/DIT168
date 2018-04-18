@@ -29,52 +29,60 @@ int main(int argc, char **argv) {
         std::cin >> choice;
 
         switch (choice) {
-            case 'w':
+            case 'w':   std::cout << "case W" << std::endl;
                 msgSteering.steeringAngle(0.0);
-                if (value <= 0.4) {
+                if (value < 0){
+                    value = 0.05;
+                }
+                    else if (value <= 0.4) {
                     value += 0.05;
-                } else {
+                    }   else {
                     std::cout << "full speed reached" << std::endl;
                 }
-                msgPedal.percent(value);
-                break;
+                    msgPedal.percent(value);
+                    break;
 
-            case 'a':
+            case 'a':   std::cout << "case a" << std::endl;
                 if (value >= 0.25) {
-                    value = 0.15;
-                }
-                msgPedal.percent(value);
-                msgSteering.steeringAngle(45);
-                break;
+                        value = 0.15;
+                    }
+                    msgPedal.percent(value);
+                    msgSteering.steeringAngle(45);
+                    break;
 
-            case 's':
-                if (value >= 0.1) {
-                    value = 0;
-                }
-                msgPedal.percent(value);
-                msgSteering.steeringAngle(0);
-                break;
-
-            case 'd':
-                if (value >= 0.25) {
-                    value = 0.15;
-                }
-                msgPedal.percent(value);
-                msgSteering.steeringAngle(-45);
-                break;
-            case 'r':
-                if (value >= 0.15) {
+            case 's': std::cout << "case s" << std::endl;
+                if (value >= 0.05) {
                     value -= 0.05;
+                } else {
+                    std::cout << "full stop reached" << std::endl;
                 }
                 msgPedal.percent(value);
-                msgSteering.steeringAngle(0.0);
+                msgSteering.steeringAngle(0);
                 break;
 
-            default:
-                msgPedal.percent(value);
-                msgSteering.steeringAngle(0);
+            case 'd':   std::cout << "case d" << std::endl;
+                if (value >= 0.25) {
+                    value = 0.15;
+                    }
+                    msgPedal.percent(value);
+                    msgSteering.steeringAngle(-45);
+                    break;
+            case 'r':   if (value == 0){value =-1;}
+                        msgPedal.percent(value);
+                        msgSteering.steeringAngle(0.0);
+                        break;
+
+            default:    value = 0;
+                    msgPedal.percent(value);
+                    msgSteering.steeringAngle(0);
+            }
+            if(value > 0 && value < 0.05){
+                std::cout << "Sending pedalPosition : 0%." << std::endl;
         }
+                else if (value < 0 ){std::cout << "Reverse : -1%." << std::endl;}
+        else{
         std::cout << "Sending pedalPosition :" << value * 100 << "%." << std::endl;
+            }
         od4.send(msgPedal);
         std::cout << "Sending steeringAngle: " << msgSteering.steeringAngle() << std::endl;
         od4.send(msgSteering);

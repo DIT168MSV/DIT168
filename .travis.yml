@@ -14,7 +14,4 @@ script:
   - docker build -t dit168.travis-armhf -f Dockerfile.armhf .
 
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
-    rm docker-latest.tar
-    docker save dit168.travis:latest > docker-latest.tar
-    fi
+  - echo "success"

@@ -1,6 +1,7 @@
 ![build status on master](https://travis-ci.org/DIT168MSV/DIT168.svg?branch=master)
-[![License](https://img.shields.io/badge/license-GPL--3-blue.svg)
-[![Alpine (x86_64)](https://img.shields.io/badge/Alpine-x86__64-blue.svg)](https://github.com/chrberger/libcluon/blob/gh-pages/alpine/v3.7/x86_64/Dockerfile#L19) [![Alpine (armhf)](https://img.shields.io/badge/Alpine-armhf-blue.svg
+![License](https://img.shields.io/badge/license-GPL--3-blue.svg)
+[![Alpine (x86_64)](https://img.shields.io/badge/Alpine-x86__64-blue.svg)](https://github.com/chrberger/libcluon/blob/gh-pages/alpine/v3.7/x86_64/Dockerfile#L19)
+[![Alpine (armhf)](https://img.shields.io/badge/Alpine-armhf-blue.svg
 )](https://github.com/chrberger/libcluon/blob/gh-pages/alpine/v3.7/armhf/Dockerfile#L25)
 
 DIT168

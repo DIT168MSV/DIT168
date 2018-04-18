@@ -25,6 +25,10 @@ int main(int /*argc*/, char** /*argv*/) {
             opendlv::proxy::PedalPositionReading receivedMsg = cluon::extractMessage<opendlv::proxy::PedalPositionReading>(std::move(envelope));
             std::cout << "Sent a message for pedal position to " << receivedMsg.percent() << "." << std::endl;
         }
+        else if (envelope.dataType() == opendlv::proxy::DistanceReading::ID()) {
+          opendlv::proxy::DistanceReading receivedMsg = cluon::extractMessage<opendlv::proxy::DistanceReading>(std::move(envelope));
+            // Ultrasonic reading
+        }
     });
 
     excom = std::make_shared<cluon::OD4Session>(Ex_CID,[&](cluon::data::Envelope &&envelope) noexcept {

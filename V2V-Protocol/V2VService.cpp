@@ -1,10 +1,10 @@
 #include "V2VService.hpp"
 
-int main() {
+int main(int argc, char **argv) {
     std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>();
 
     float pedalPos = 0, steeringAngle = 0;
-    
+
     cluon::OD4Session od4(191,[&pedalPos, &steeringAngle](cluon::data::Envelope &&envelope) noexcept {
         if (envelope.dataType() == opendlv::proxy::GroundSteeringReading::ID()) {
             opendlv::proxy::GroundSteeringReading receivedMsg = cluon::extractMessage<opendlv::proxy::GroundSteeringReading>(std::move(envelope));
@@ -16,6 +16,7 @@ int main() {
         }
     });
 
+
     while (1) {
         int choice;
         std::string groupId;
@@ -24,7 +25,7 @@ int main() {
         std::cout << "(2) FollowRequest" << std::endl;
         std::cout << "(3) FollowResponse" << std::endl;
         std::cout << "(4) StopFollow" << std::endl;
-        std::cout << "(5) LeaderStatus" << std::endl;
+        std::cout << "(5) LeaderStatus (Is now being sent automatically if you have a follower)" << std::endl;
         std::cout << "(6) FollowerStatus" << std::endl;
         std::cout << "(#) Nothing, just quit." << std::endl;
         std::cout << ">> ";
@@ -101,10 +102,20 @@ V2VService::V2VService() {
 
                        // After receiving a FollowRequest, check first if there is currently no car already following.
                        if (followerIp.empty()) {
-                           unsigned long len = sender.find(':');    // If no, add the requester to known follower slot
-                           followerIp = sender.substr(0, len);      // and establish a sending channel.
-                           toFollower = std::make_shared<cluon::UDPSender>(followerIp, DEFAULT_PORT);
-                           followResponse();
+                          unsigned long len = sender.find(':');    // If no, add the requester to known follower slot
+                          followerIp = sender.substr(0, len);      // and establish a sending channel.
+                          toFollower = std::make_shared<cluon::UDPSender>(followerIp, DEFAULT_PORT);
+                          followResponse();
+
+                          // Auto to send leaderStatus at FREQ
+                          //auto atFrequency{[&v2vService, &pedalPos, &steeringAngle]() -> bool {
+                          //      v2vService->leaderStatus(pedalPos, steeringAngle, 0);
+                          //      return true;
+                          //               }};
+                          // od4.timeTrigger(10, atFrequency);
+
+                          // std::cout << "Sending Leader status'" << std::endl;
+
                        }
                        break;
                    }
@@ -142,7 +153,7 @@ V2VService::V2VService() {
                    }
                    case LEADER_STATUS: {
                        LeaderStatus leaderStatus = decode<LeaderStatus>(msg.second);
-                       std::cout << "received speed: '" << leaderStatus.speed() << " and angle: " << leaderStatus.steeringAngle()
+                       std::cout << leaderStatus.timestamp() << "  ---  Received speed: '" << leaderStatus.speed() << " and angle: " << leaderStatus.steeringAngle()
                                  << "' from '" << sender << "'!" << std::endl;
 
                        /* TODO: implement follow logic */

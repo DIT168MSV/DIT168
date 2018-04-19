@@ -1,9 +1,9 @@
 #include "V2VService.hpp"
 
+std::shared_ptr<cluon::OD4Session> od4;
+
 int main(int argc, char **argv) {
     std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>();
-
-    std::shared_ptr<cluon::OD4Session> od4;
 
     float pedalPos = 0, steeringAngle = 0;
 
@@ -42,6 +42,8 @@ int main(int argc, char **argv) {
 
         switch (choice) {
             case 1: v2vService->announcePresence();
+                    msgAnnounce.vehicleIp(YOUR_CAR_IP);
+                    msgAnnounce.groupId(YOUR_GROUP_ID);
                     od4->send(msgAnnounce); 
                     break;
             case 2: std::cout << "Which group do you want to follow?" << std::endl;
@@ -65,6 +67,9 @@ int main(int argc, char **argv) {
                 break;
             
             case 5: v2vService->leaderStatus(pedalPos, steeringAngle, 100);
+            msgLeaderStatus.speed(pedalPos);
+            msgLeaderStatus.steeringAngle(steeringAngle);
+            msgLeaderStatus.distanceTraveled(100);
             od4->send(msgLeaderStatus);
             break;
             case 6: v2vService->followerStatus(); 
@@ -80,6 +85,7 @@ int main(int argc, char **argv) {
  * Implementation of the V2VService class as declared in V2VService.hpp
  */
 V2VService::V2VService() {
+
     /*
      * The broadcast field contains a reference to the broadcast channel which is an OD4Session. This is where
      * AnnouncePresence messages will be received.
@@ -96,7 +102,7 @@ V2VService::V2VService() {
                                 << ap.groupId() << "'!" << std::endl;
 
                       presentCars[ap.groupId()] = ap.vehicleIp();
-
+                      od4->send(ap);
                       break;
                   }
                   default: std::cout << "¯\\_(ツ)_/¯" << std::endl;
@@ -127,12 +133,14 @@ V2VService::V2VService() {
                           followResponse();
 
                        }
+                       od4->send(followRequest);
                        break;
                    }
                    case FOLLOW_RESPONSE: {
                        FollowResponse followResponse = decode<FollowResponse>(msg.second);
                        std::cout << "received '" << followResponse.LongName()
                                  << "' from '" << sender << "'!" << std::endl;
+                       od4->send(followResponse);
                        break;
                    }
                    case STOP_FOLLOW: {
@@ -150,6 +158,7 @@ V2VService::V2VService() {
                            leaderIp = "";
                            toLeader.reset();
                        }
+                       od4->send(stopFollow);
                        break;
                    }
                    case FOLLOWER_STATUS: {
@@ -158,7 +167,7 @@ V2VService::V2VService() {
                                  << "' from '" << sender << "'!" << std::endl;
 
                        /* TODO: implement lead logic (if applicable) */
-
+                       od4 -> send(followerStatus);
                        break;
                    }
                    case LEADER_STATUS: {
@@ -167,7 +176,7 @@ V2VService::V2VService() {
                                  << "' from '" << sender << "'!" << std::endl;
 
                        /* TODO: implement follow logic */
-
+                       od4->send(leaderStatus);          
                        break;
                    }
                    default: std::cout << "¯\\_(ツ)_/¯" << std::endl;

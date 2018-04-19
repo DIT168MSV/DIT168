@@ -1,4 +1,4 @@
-version: '3'
+version: '4'
 services:
     odsupercomponent:
         image: seresearch/2018-dit-168:v0.3.5-armhf
@@ -29,7 +29,7 @@ services:
         command: "/usr/bin/opendlv-device-ultrasonic-srf08 --dev=/dev/i2c-1 --bus-address=113 --cid=191 --freq$
 
     opendlv-signal-viewer:
-        image: signal:test2
+        image: signal:test3
         network_mode: "host"
         restart: always
         command: "/usr/bin/opendlv-signal-viewer -p 8080:8081 --cid=191"

@@ -14,7 +14,7 @@
 /** ADD YOUR CAR_IP AND GROUP_ID HERE:  *****************/
 
 static const std::string YOUR_CAR_IP    = "172.20.10.10";
-static const std::string YOUR_GROUP_ID  = "8";
+static const std::string YOUR_GROUP_ID  = "500";
 
 /********************************************************/
 /** DON'T CHANGE STUFF BELOW THIS LINE. *****************/

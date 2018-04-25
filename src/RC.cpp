@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
 
 	uint16_t const CID {192};
-	uint16_t const FREQ {50};
+	const float FREQ {2.0f};
 	std::shared_ptr<cluon::OD4Session> od4;
 
 

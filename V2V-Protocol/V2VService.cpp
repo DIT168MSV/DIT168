@@ -1,4 +1,3 @@
-
 #include "V2VService.hpp"
 
 std::shared_ptr<cluon::OD4Session> od4;
@@ -18,7 +17,6 @@ int main(int argc, char **argv) {
             pedalPos = receivedMsg.percent();
         }
     });
-
 
     while (1) {
         AnnouncePresence msgAnnounce;
@@ -41,24 +39,31 @@ int main(int argc, char **argv) {
         std::cout << ">> ";
         std::cin >> choice;
 
+        const uint16_t FREQ = 8;
+
         switch (choice) {
-            case 1: v2vService->announcePresence();
-                    msgAnnounce.vehicleIp(YOUR_CAR_IP);
-                    msgAnnounce.groupId(YOUR_GROUP_ID);
-                    od4->send(msgAnnounce); 
-                    break;
-            case 2: std::cout << "Which group do you want to follow?" << std::endl;
+            case 1: {
+                v2vService->announcePresence();
+                msgAnnounce.vehicleIp(YOUR_CAR_IP);
+                msgAnnounce.groupId(YOUR_GROUP_ID);
+                od4->send(msgAnnounce); 
+                break;
+            }
+            case 2: {
+                std::cout << "Which group do you want to follow?" << std::endl;
                 std::cin >> groupId;
                 if (v2vService->presentCars.find(groupId) != v2vService->presentCars.end()){
                     v2vService->followRequest(v2vService->presentCars[groupId]);}
                 else {std::cout << "Sorry, unable to locate that groups vehicle!" << std::endl;}
                 od4->send(msgFollowRequest);
                 break;
-            
-            case 3: v2vService->followResponse(); 
-            od4->send(msgFollowResponse);
-            break;
-            case 4: 
+            }
+            case 3: {
+                v2vService->followResponse(); 
+                od4->send(msgFollowResponse);       
+                break;
+            }
+            case 4: {
                 std::cout << "Which group do you want to stop follow?" << std::endl;
                 std::cin >> groupId;
                 if (v2vService->presentCars.find(groupId) != v2vService->presentCars.end()){
@@ -66,20 +71,35 @@ int main(int argc, char **argv) {
                 else {std::cout << "Sorry, unable to locate that groups vehicle!" << std::endl;}
                 od4->send(msgStopFollow);
                 break;
-            
-            case 5: v2vService->leaderStatus(pedalPos, steeringAngle, 100);
-            msgLeaderStatus.speed(pedalPos);
-            msgLeaderStatus.steeringAngle(steeringAngle);
-            msgLeaderStatus.distanceTraveled(100);
-            od4->send(msgLeaderStatus);
-            break;
-            case 6: v2vService->followerStatus(); 
-            od4->send(msgFollowerStatus);
-            break;
-            default: exit(0);
-        
+            }    
+            case 5: {
+                auto sendLoop{[&msgLeaderStatus, &v2vService, &pedalPos, &steeringAngle]() -> bool {
+
+                v2vService->leaderStatus(pedalPos, steeringAngle, 100);
+
+                msgLeaderStatus.speed(pedalPos);
+                msgLeaderStatus.steeringAngle(steeringAngle);
+                msgLeaderStatus.distanceTraveled(100);
+                od4->send(msgLeaderStatus);
+
+                std::cout << "Sending leaderStatus with pedalposition: " << pedalPos << " and steeringangle: " << steeringAngle << std::endl;
+
+                return true;
+                }};
+
+                od4->timeTrigger(8, sendLoop);
+                break;
+            }
+            case 6: {
+                v2vService->followerStatus(); 
+                od4->send(msgFollowerStatus);
+                break;
+            }
+            default: {
+                exit(0);
+            }    
+        }
     }
-  }
 }
 
 /**

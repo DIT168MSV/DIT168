@@ -8,7 +8,7 @@
 #include "cluon/Envelope.hpp"
 #include "cluon/UDPReceiver.hpp"
 #include "messages.hpp"
-#define MAX 11
+#define MAX 5
 
 using namespace std::chrono;
 
@@ -19,13 +19,11 @@ std::shared_ptr<cluon::OD4Session> incom, excom;
     const float FREQ {2.0f};
     uint16_t sensor_dist[MAX];
     uint8_t iterator {0};
-    const float dist_average;
-
-
+    float dist_average;
 
    auto last = std::chrono::high_resolution_clock::now();
     
-    incom = std::make_shared<cluon::OD4Session>(In_CID,[](cluon::data::Envelope &&envelope) noexcept {
+    incom = std::make_shared<cluon::OD4Session>(In_CID,[&](cluon::data::Envelope &&envelope) noexcept {
         if (envelope.dataType() == opendlv::proxy::GroundSteeringReading::ID()) {
             opendlv::proxy::GroundSteeringReading receivedMsg = cluon::extractMessage<opendlv::proxy::GroundSteeringReading>(std::move(envelope));
             std::cout << "Sent a message for ground steering to " << receivedMsg.steeringAngle() << "." << std::endl;
@@ -34,14 +32,36 @@ std::shared_ptr<cluon::OD4Session> incom, excom;
             opendlv::proxy::PedalPositionReading receivedMsg = cluon::extractMessage<opendlv::proxy::PedalPositionReading>(std::move(envelope));
             std::cout << "Sent a message for pedal position to " << receivedMsg.percent() << "." << std::endl;
         }
-        else if (envelope.dataType() == opendlv::proxy::DistanceReading::ID()) {
+       else if (envelope.dataType() == opendlv::proxy::DistanceReading::ID()) {
           opendlv::proxy::DistanceReading sonic = cluon::extractMessage<opendlv::proxy::DistanceReading>(std::move(envelope));
             // Ultrasonic reading
-            std::cout << "Distance from USonic reading " << sonic.distance() << "." << std::endl;
-        }
+            sensor_dist[iterator] = sonic.distance() * 100;
+            iterator++;
+            if (iterator == MAX) iterator = 0;
+            dist_average = 0;
+            for (int i {0}; i < 10; i++){
+                dist_average += sensor_dist[i];
+                dist_average /= MAX;
+
+            }
+
+            if (dist_average <= 25){
+            opendlv::proxy::GroundSteeringReading msgSteering;
+            opendlv::proxy::PedalPositionReading msgPedal;
+        
+                msgPedal.percent(0);
+                msgSteering.steeringAngle(0);
+                sonic.distance(dist_average);
+                incom->send(msgSteering);
+                incom->send(msgPedal);
+                incom->send(sonic);
+                std::cout << "Distance from USonic reading " << sonic.distance() << "." << std::endl;
+                
+            }
+        }    
     });
 
-    excom = std::make_shared<cluon::OD4Session>(Ex_CID,[&last,&incom](cluon::data::Envelope &&envelope) noexcept {
+    excom = std::make_shared<cluon::OD4Session>(Ex_CID,[&last,&incom,&dist_average,&iterator,&sensor_dist](cluon::data::Envelope &&envelope) noexcept {
         if (envelope.dataType() == opendlv::proxy::GroundSteeringReading::ID()) {
             opendlv::proxy::GroundSteeringReading receivedMsg = cluon::extractMessage<opendlv::proxy::GroundSteeringReading>(std::move(envelope));
             std::cout << "Recieved a message for ground steering to " << receivedMsg.steeringAngle() << "." << std::endl;
@@ -60,33 +80,7 @@ std::shared_ptr<cluon::OD4Session> incom, excom;
             msgPedal.percent(receivedMsg.percent());
             last = std::chrono::high_resolution_clock::now();
             incom->send(msgPedal);
-
-        }else if (envelope.dataType() == opendlv::proxy::DistanceReading::ID()) {
-          opendlv::proxy::DistanceReading sonic = cluon::extractMessage<opendlv::proxy::DistanceReading>(std::move(envelope));
-            // Ultrasonic reading
-            sensor_dist[iterator] {sonic.distance()};
-            iterator++;
-            if (iterator == MAX) iterator = 0;
-            dist_average {0};
-            for (int i {0}; i < 11; i++){
-                dist_average += sensor_dist[i];
-                dist_average /= MAX;
-                std::cout << dist_average << std::endl;
-            }
-
-            if (dist_average <= 25){
-            opendlv::proxy::GroundSteeringReading msgSteering;
-            opendlv::proxy::PedalPositionReading msgPedal;
-        
-                msgPedal.percent(0);
-                msgSteering.steeringAngle(0);
-                sonic.distance(dist_average);
-                incom->send(msgSteering);
-                incom->send(msgPedal);
-                income->send(sonic);
-                
-            }
-        }    
+        }
     });
         auto safetyTimer{[&incom, &last]() -> bool {
             opendlv::proxy::GroundSteeringReading msgSteering;

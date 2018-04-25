@@ -177,7 +177,9 @@ V2VService::V2VService() {
                                  << "' from '" << sender << "'!" << std::endl;
 
                        /* TODO: implement follow logic */
-                       od4->send(leaderStatus);          
+                       if (!leaderIp.empty()) {
+                           od4->send(leaderStatus); 
+                       }         
                        break;
                    }
                    default: std::cout << "¯\\_(ツ)_/¯" << std::endl;

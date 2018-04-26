@@ -3,7 +3,7 @@
 std::shared_ptr<cluon::OD4Session> od4;
 
 int main(int argc, char **argv) {
-    int retCode{0}
+    int retCode{0};
     auto commandlineArguments = cluon::getCommandlineArguments(argc, argv);
     if (0 == commandlineArguments.count("cid") || 0 == commandlineArguments.count("freq") ||
         0 == commandlineArguments.count("ip") || 0 == commandlineArguments.count("id")) {

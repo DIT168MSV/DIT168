@@ -75,9 +75,11 @@ int main(int argc, char **argv) {
 
             case 'x': pedalValue = 0;
                     msgPedal.percent(pedalValue);
+                    msgSteering.steeringAngle(0);
                     od4->send(msgPedal);
-                     exit(0);
-                     break;
+                    od4->send(msgSteering);
+                    exit(0);
+                    break;
 
             default:    pedalValue = 0;
                     msgPedal.percent(pedalValue);

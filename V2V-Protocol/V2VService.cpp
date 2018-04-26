@@ -106,7 +106,6 @@ int main(int argc, char **argv) {
  * Implementation of the V2VService class as declared in V2VService.hpp
  */
 V2VService::V2VService() {
-
     /*
      * The broadcast field contains a reference to the broadcast channel which is an OD4Session. This is where
      * AnnouncePresence messages will be received.
@@ -194,10 +193,20 @@ V2VService::V2VService() {
                    case LEADER_STATUS: {
                        LeaderStatus leaderStatus = decode<LeaderStatus>(msg.second);
                        std::cout << leaderStatus.timestamp() << "  ---  Received speed: '" << leaderStatus.speed() << " and angle: " << leaderStatus.steeringAngle()
-                                 << "' from '" << sender << "'!" << std::endl;
+                                 << "' from '" << sender << "'!    -    " << leaderStatus.distanceTraveled() << std::endl;
 
-                       /* TODO: implement follow logic */
-                       od4->send(leaderStatus);          
+                       /* TODO: completely implement follow logic */
+                       od4->send(leaderStatus);
+
+                       opendlv::proxy::GroundSteeringReading msgSteering;
+    					opendlv::proxy::PedalPositionReading msgPedal;
+
+                       msgSteering.steeringAngle(leaderStatus.steeringAngle());
+                       msgPedal.percent(leaderStatus.speed());
+
+                       od4->send(msgSteering);
+                       od4->send(msgPedal);
+
                        break;
                    }
                    default: std::cout << "¯\\_(ツ)_/¯" << std::endl;

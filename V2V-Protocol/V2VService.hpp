@@ -12,9 +12,9 @@
 #include <iostream>
 
 /** ADD YOUR CAR_IP AND GROUP_ID HERE:  *****************/
-
-static const std::string YOUR_CAR_IP    = "172.20.10.10";
-static const std::string YOUR_GROUP_ID  = "8";
+// This is now being done via commandline
+//static const std::string YOUR_CAR_IP    = "172.20.10.10";
+//static const std::string YOUR_GROUP_ID  = "8";
 
 /********************************************************/
 /** DON'T CHANGE STUFF BELOW THIS LINE. *****************/
@@ -34,7 +34,7 @@ class V2VService {
 public:
     std::map <std::string, std::string> presentCars;
 
-    V2VService();
+    V2VService(std::string ip, std::string id);
 
     void announcePresence();
     void followRequest(std::string vehicleIp);
@@ -44,6 +44,9 @@ public:
     void followerStatus();
 
 private:
+    std::string v2vIP;
+    std::string v2vID;
+    
     std::string leaderIp;
     std::string followerIp;
 

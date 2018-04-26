@@ -3,11 +3,27 @@
 std::shared_ptr<cluon::OD4Session> od4;
 
 int main(int argc, char **argv) {
-    std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>();
+    int retCode{0}
+    auto commandlineArguments = cluon::getCommandlineArguments(argc, argv);
+    if (0 == commandlineArguments.count("cid") || 0 == commandlineArguments.count("freq") ||
+        0 == commandlineArguments.count("ip") || 0 == commandlineArguments.count("id")) {
+        std::cerr << argv[0] << " sends and receives follower-/leader-status in accordance to the DIT168 V2V protocol." << std::endl;
+        std::cerr << "Usage:   " << argv[0]
+                  << " --cid=<OD4Session components> --freq=<frequency> --ip=<onV2VNetwork> --id=<DIT168Group>" << std::endl;
+        std::cerr << "Example: " << argv[0] << " --cid=191 --freq=8 --ip=172.20.10.10 --id=8" << std::endl;
+        retCode = 1;
+    } else {
+        const uint16_t CID = (uint16_t) std::stoi(commandlineArguments["cid"]);
+        const uint16_t FREQ = (uint16_t) std::stoi(commandlineArguments["freq"]);
+        const std::string IP = commandlineArguments["ip"];
+        const std::string ID = commandlineArguments["id"];
+    
+        
+    std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>(IP, ID);
 
     float pedalPos = 0, steeringAngle = 0;
 
-    od4 = std::make_shared<cluon::OD4Session>(191,[&pedalPos, &steeringAngle](cluon::data::Envelope &&envelope) noexcept {
+    od4 = std::make_shared<cluon::OD4Session>(CID,[&pedalPos, &steeringAngle](cluon::data::Envelope &&envelope) noexcept {
         if (envelope.dataType() == opendlv::proxy::GroundSteeringReading::ID()) {
             opendlv::proxy::GroundSteeringReading receivedMsg = cluon::extractMessage<opendlv::proxy::GroundSteeringReading>(std::move(envelope));
             steeringAngle = receivedMsg.steeringAngle();
@@ -39,13 +55,11 @@ int main(int argc, char **argv) {
         std::cout << ">> ";
         std::cin >> choice;
 
-        const uint16_t FREQ = 8;
-
         switch (choice) {
             case 1: {
                 v2vService->announcePresence();
-                msgAnnounce.vehicleIp(YOUR_CAR_IP);
-                msgAnnounce.groupId(YOUR_GROUP_ID);
+                msgAnnounce.vehicleIp(IP);
+                msgAnnounce.groupId(ID);
                 od4->send(msgAnnounce); 
                 break;
             }
@@ -87,7 +101,7 @@ int main(int argc, char **argv) {
                 return true;
                 }};
 
-                od4->timeTrigger(8, sendLoop);
+                od4->timeTrigger(FREQ, sendLoop);
                 break;
             }
             case 6: {
@@ -97,15 +111,18 @@ int main(int argc, char **argv) {
             }
             default: {
                 exit(0);
-            }    
-        }
-    }
+            	}    
+        	}
+    	}
+	}
 }
 
 /**
  * Implementation of the V2VService class as declared in V2VService.hpp
  */
-V2VService::V2VService() {
+V2VService::V2VService(std::string ip, std::string id) {
+    v2vIP = ip;
+	v2vID = id;
     /*
      * The broadcast field contains a reference to the broadcast channel which is an OD4Session. This is where
      * AnnouncePresence messages will be received.
@@ -212,7 +229,7 @@ V2VService::V2VService() {
                    default: std::cout << "¯\\_(ツ)_/¯" << std::endl;
                }
            });
-}
+		}
 
 /**
  * This function sends an AnnouncePresence (id = 1001) message on the broadcast channel. It will contain information
@@ -221,8 +238,8 @@ V2VService::V2VService() {
 void V2VService::announcePresence() {
     if (!followerIp.empty()) return;
     AnnouncePresence announcePresence;
-    announcePresence.vehicleIp(YOUR_CAR_IP);
-    announcePresence.groupId(YOUR_GROUP_ID);
+    announcePresence.vehicleIp(v2vIP);
+    announcePresence.groupId(v2vID);
     broadcast->send(announcePresence);
 }
 

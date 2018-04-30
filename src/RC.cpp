@@ -6,18 +6,19 @@
 int main(int argc, char **argv) {
 
 	uint16_t const CID {192};
-	uint16_t const FREQ {50};
-	std::shared_ptr<cluon::OD4Session> od4;
 
+	std::shared_ptr<cluon::OD4Session> od4;
 
     od4 = std::make_shared<cluon::OD4Session>(CID, [](cluon::data::Envelope &&envelope) noexcept {});
 
     float pedalValue{0};
+    float steeringValue{0};
+    float offSet{0.11};
     unsigned char choice;
 
-    std::cout << "  Group 8 RemoteControl " << std::endl;
+    std::cout << "  Group 8 RemoteControl" << std::endl;
     std::cout << "                       " << std::endl;
-    std::cout << "    Keys to use        " << std::endl;
+    std::cout << "      Keys to use      " << std::endl;
     std::cout << "           w           " << std::endl;
     std::cout << "    a             d    " << std::endl;
     std::cout << "           s           " << std::endl;
@@ -28,72 +29,94 @@ int main(int argc, char **argv) {
         opendlv::proxy::GroundSteeringReading msgSteering;
         opendlv::proxy::PedalPositionReading msgPedal;
 
-
-        std::cin >> choice;
+        system("/bin/stty raw");
+        choice = getchar();
+        system("/bin/stty cooked");
 
         switch (choice) {
-            case 'w':   msgSteering.steeringAngle(0.0);
-                if (pedalValue <= 0){
+            case 'w':   
+                if(pedalValue <= 0){
+                    std::cout << "ACCELERATING" << std::endl;
                     pedalValue = 0.10;
-                     std::cout << " YOU ARE NOW ACCELERATING..." << std::endl;
                 }
-                    else if (pedalValue <= 0.35) {
+                else if(pedalValue <= 0.35){
+                    std::cout << "ACCELERATING" << std::endl;
                     pedalValue += 0.02;
-                    std::cout << "YOU ARE NOW ACCELERATING..." << std::endl;
-                    }   else {
-                    std::cout << "full speed reached" << std::endl;
-                }
-                    msgPedal.percent(pedalValue);
-                    break;
-
-            case 'a':   std::cout << "YOU JUST TURN LEFT..." << std::endl;
-                if (pedalValue >= 0.15) {
-                        pedalValue = 0.15;
-                    }
-                    msgPedal.percent(pedalValue);
-                    msgSteering.steeringAngle(45);
-                    break;
-
-            case 's': if (pedalValue > 0.11) {
-                    pedalValue -= 0.02;
-                    std::cout << "YOU ARE NOW DECELERATING..." << std::endl;
-                } else {
-                    pedalValue = 0;
-                    std::cout << "FULL STOP REACHED" << std::endl;
+                }      
+                else{
+                    std::cout << "FULL SPEED REACHED" << std::endl;
                 }
                 msgPedal.percent(pedalValue);
-                msgSteering.steeringAngle(0);
+                msgSteering.steeringAngle(steeringValue);
                 break;
 
-            case 'd':   std::cout << "YOU JUST TURNED RIGHT..." << std::endl;
-                if (pedalValue >= 0.15) {
-                    pedalValue = 0.15;
-                    }
-                    msgPedal.percent(pedalValue);
-                    msgSteering.steeringAngle(-45);
-                    break;
+            case 'a':
+                if(steeringValue == offSet){
+                    std::cout << "TURNING LEFT" << std::endl;
+                    steeringValue = (offSet + 90);
+                }
+                else if(steeringValue < offSet){
+                    std::cout << "GOING STRAIGHT" << std::endl;
+                    steeringValue = offSet;
+                }
+                msgPedal.percent(pedalValue);
+                msgSteering.steeringAngle(steeringValue);
+                break;
 
-            case 'x': pedalValue = 0;
-                    msgPedal.percent(pedalValue);
-                    msgSteering.steeringAngle(0);
-                    od4->send(msgPedal);
-                    od4->send(msgSteering);
-                    exit(0);
-                    break;
+            case 's': 
+                if(pedalValue > 0.11){
+                    std::cout << "DECELERATING" << std::endl;
+                    pedalValue -= 0.02;
+                } 
+                else{
+                    std::cout << "STOPPED" << std::endl;
+                    pedalValue = 0;
+                }
+                msgPedal.percent(pedalValue);
+                msgSteering.steeringAngle(steeringValue);
+                break;
 
-            default:    pedalValue = 0;
-                    msgPedal.percent(pedalValue);
-                    msgSteering.steeringAngle(0);
+            case 'd':   
+                if(steeringValue == offSet){
+                    std::cout << "TURNING RIGHT" << std::endl;
+                    steeringValue = (offSet - 75);
+                }
+                else if(steeringValue > offSet){
+                    std::cout << "GOING STRAIGHT" << std::endl;
+                    steeringValue = offSet;
+                }
+                msgPedal.percent(pedalValue);
+                msgSteering.steeringAngle(steeringValue);
+                break;
+
+            case 'r':
+                pedalValue = (-0.50);
+                msgPedal.percent(0);
+                od4->send(msgPedal);
+                msgPedal.percent(pedalValue);
+                msgSteering.steeringAngle(steeringValue);
+                break;
+
+            case 'x': 
+                pedalValue = 0;
+                steeringValue = offSet;
+                msgPedal.percent(pedalValue);
+                msgSteering.steeringAngle(steeringValue);
+                od4->send(msgPedal);
+                od4->send(msgSteering);
+                exit(0);
+                break;
+
+            default:    
+                pedalValue = 0;
+                steeringValue = offSet;
+                msgPedal.percent(pedalValue);
+                msgSteering.steeringAngle(steeringValue);
             }
-            if(pedalValue > 0 && pedalValue < 0.02){
-                std::cout << "with pedalPosition : 0 %." << std::endl;
-        }
-                else if (pedalValue < 0 ){std::cout << "Reverse : -1%." << std::endl;}
-        else{
-        std::cout << "with pedalPosition : " << pedalValue * 100 << "%." << std::endl;
-            }
+
+        std::cout << "SteeringAngle: " << msgSteering.steeringAngle() << " PedalPosition: " << msgPedal.percent() << std::endl;
+
         od4->send(msgPedal);
-        std::cout << "with steeringAngle: " << msgSteering.steeringAngle() << std::endl;
         od4->send(msgSteering);
     }
     return 0;

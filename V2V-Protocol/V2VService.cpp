@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>(IP, ID);
 
     float pedalPos = 0, steeringAngle = 0;
-    float v2vOffSet{0.11};
+    float v2vOffSet{0.13};
 
     od4 = std::make_shared<cluon::OD4Session>(CID,[&pedalPos, &steeringAngle](cluon::data::Envelope &&envelope) noexcept {
         if (envelope.dataType() == opendlv::proxy::GroundSteeringReading::ID()) {
@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
 V2VService::V2VService(std::string ip, std::string id) {
     v2vIP = ip;
 	v2vID = id;
-	float v2vOffSet{0.11};
+	float v2vOffSet{0.13};
     /*
      * The broadcast field contains a reference to the broadcast channel which is an OD4Session. This is where
      * AnnouncePresence messages will be received.

@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 
     float pedalValue{0};
     float steeringValue{0};
-    float offSet{0.11};
+    float offSet{0.13};
     unsigned char choice;
 
     std::cout << "  Group 8 RemoteControl" << std::endl;

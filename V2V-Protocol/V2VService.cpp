@@ -6,20 +6,25 @@ int main(int argc, char **argv) {
     int retCode{0};
     auto commandlineArguments = cluon::getCommandlineArguments(argc, argv);
     if (0 == commandlineArguments.count("cid") || 0 == commandlineArguments.count("freq") ||
-        0 == commandlineArguments.count("ip") || 0 == commandlineArguments.count("id")) {
+        0 == commandlineArguments.count("ip") || 0 == commandlineArguments.count("id") ||
+        0 == commandlineArguments.count("left") || 0 == commandlineArguments.count("right")) {
         std::cerr << argv[0] << " sends and receives follower-/leader-status in accordance to the DIT168 V2V protocol." << std::endl;
         std::cerr << "Usage:   " << argv[0]
-                  << " --cid=<OD4Session components> --freq=<frequency> --ip=<onV2VNetwork> --id=<DIT168Group>" << std::endl;
-        std::cerr << "Example: " << argv[0] << " --cid=191 --freq=8 --ip=172.20.10.10 --id=8" << std::endl;
+                  << " --cid=<OD4Session components> --freq=<frequency> --ip=<onV2VNetwork> --id=<DIT168Group> --left=<Offset number for left turn> --right<Offset number for right turn>" << std::endl;
+        std::cerr << "Example: " << argv[0] << " --cid=191 --freq=8 --ip=172.20.10.10 --id=8 --left= 0.25 --right=0.20" << std::endl;
         retCode = 1;
     } else {
         const uint16_t CID = (uint16_t) std::stoi(commandlineArguments["cid"]);
         const uint16_t FREQ = (uint16_t) std::stoi(commandlineArguments["freq"]);
+
         const std::string IP = commandlineArguments["ip"];
         const std::string ID = commandlineArguments["id"];
+
+        const float leftOffset = std::stof(commandlineArguments["left"]);
+        const float rightOffset = std::stof(commandlineArguments["right"]);
     
         
-    std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>(IP, ID);
+    std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>(IP, ID, leftOffset, rightOffset);
 
     float pedalPos = 0, steeringAngle = 0;
     float v2vOffSet{0.13};
@@ -121,9 +126,11 @@ int main(int argc, char **argv) {
 /**
  * Implementation of the V2VService class as declared in V2VService.hpp
  */
-V2VService::V2VService(std::string ip, std::string id) {
+V2VService::V2VService(std::string ip, std::string id, float left, float right) {
     v2vIP = ip;
 	v2vID = id;
+	LEFT = left;
+	RIGHT = right;
 	float v2vOffSet{0.13};
     /*
      * The broadcast field contains a reference to the broadcast channel which is an OD4Session. This is where
@@ -224,10 +231,10 @@ V2VService::V2VService(std::string ip, std::string id) {
     						msgSteering.steeringAngle(v2vOffSet);
     					}
     					else if(leaderStatus.steeringAngle() > 0){
-    						msgSteering.steeringAngle(v2vOffSet + leaderStatus.steeringAngle());
+    						msgSteering.steeringAngle(v2vOffSet + LEFT + leaderStatus.steeringAngle());
     					}
     					else{
-    						msgSteering.steeringAngle(v2vOffSet - leaderStatus.steeringAngle());
+    						msgSteering.steeringAngle(v2vOffSet + RIGHT + leaderStatus.steeringAngle());
     					}
 
                        	msgPedal.percent(leaderStatus.speed());

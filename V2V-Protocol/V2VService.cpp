@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
                 msgLeaderStatus.distanceTraveled(100);
                 od4->send(msgLeaderStatus);
 
-                std::cout << "Sending leaderStatus with pedalposition: " << pedalPos << " and steeringangle: " << steeringAngle << std::endl;
+                std::cout << "Sending leaderStatus with pedalposition: " << pedalPos << " and steeringangle: " << (steeringAngle - v2vOffSet) << std::endl;
 
                 return true;
                 }};

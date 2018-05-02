@@ -4,6 +4,18 @@
 #include "messages.hpp"
 
 int main(int argc, char **argv) {
+    int retCode{0};
+    auto commandlineArguments = cluon::getCommandlineArguments(argc, argv);
+    if (0 == commandlineArguments.count("right") || 0 == commandlineArguments.count("left")) {
+        std::cerr << argv[0] << " The RC for the manual steering " << std::endl;
+        std::cerr << "Usage:   " << argv[0]
+                  << " --right=<the amount of right steering value> --left=<the amount of left steering value>" << std::endl;
+        std::cerr << "Example: " << argv[0] << " --right=0.65 --left=0.6" << std::endl;
+        retCode = 1;
+    } else {
+
+        const float RIGHT = std::stof(commandlineArguments["right"]);
+        const float LEFT = std::stof(commandlineArguments["left"]);
 
 	uint16_t const CID {192};
 
@@ -53,7 +65,7 @@ int main(int argc, char **argv) {
             case 'a':
                 if(steeringValue == offSet){
                     std::cout << "TURNING LEFT" << std::endl;
-                    steeringValue = (offSet + 90);
+                    steeringValue = (offSet + LEFT);
                 }
                 else if(steeringValue < offSet){
                     std::cout << "GOING STRAIGHT" << std::endl;
@@ -79,7 +91,7 @@ int main(int argc, char **argv) {
             case 'd':   
                 if(steeringValue == offSet){
                     std::cout << "TURNING RIGHT" << std::endl;
-                    steeringValue = (offSet - 75);
+                    steeringValue = (offSet - RIGHT);
                 }
                 else if(steeringValue > offSet){
                     std::cout << "GOING STRAIGHT" << std::endl;
@@ -114,10 +126,11 @@ int main(int argc, char **argv) {
                 msgSteering.steeringAngle(steeringValue);
             }
 
-        std::cout << "SteeringAngle: " << msgSteering.steeringAngle() << " PedalPosition: " << msgPedal.percent() << std::endl;
+            std::cout << "SteeringAngle: " << msgSteering.steeringAngle() << " PedalPosition: " << msgPedal.percent() << std::endl;
 
-        od4->send(msgPedal);
-        od4->send(msgSteering);
+            od4->send(msgPedal);
+            od4->send(msgSteering);
+        }
+        return 0;
     }
-    return 0;
 }

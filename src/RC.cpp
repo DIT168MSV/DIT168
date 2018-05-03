@@ -37,16 +37,20 @@ int main(int argc, char **argv) {
     std::cout << "                       " << std::endl;
 
 	while (1) {
-       
+
         opendlv::proxy::GroundSteeringReading msgSteering;
         opendlv::proxy::PedalPositionReading msgPedal;
-
+/**
+* We use "stty" to get the raw input so we don't need to press enter every time
+* we want to give the car a new command. after we do cooked to not mess up
+* the terminal output.
+**/
         system("/bin/stty raw");
         choice = getchar();
         system("/bin/stty cooked");
 
         switch (choice) {
-            case 'w':   
+            case 'w':
                 if(pedalValue <= 0){
                     std::cout << "ACCELERATING" << std::endl;
                     pedalValue = 0.10;
@@ -54,7 +58,7 @@ int main(int argc, char **argv) {
                 else if(pedalValue <= 0.35){
                     std::cout << "ACCELERATING" << std::endl;
                     pedalValue += 0.02;
-                }      
+                }
                 else{
                     std::cout << "FULL SPEED REACHED" << std::endl;
                 }
@@ -75,11 +79,11 @@ int main(int argc, char **argv) {
                 msgSteering.steeringAngle(steeringValue);
                 break;
 
-            case 's': 
+            case 's':
                 if(pedalValue > 0.11){
                     std::cout << "DECELERATING" << std::endl;
                     pedalValue -= 0.02;
-                } 
+                }
                 else{
                     std::cout << "STOPPED" << std::endl;
                     pedalValue = 0;
@@ -88,7 +92,7 @@ int main(int argc, char **argv) {
                 msgSteering.steeringAngle(steeringValue);
                 break;
 
-            case 'd':   
+            case 'd':
                 if(steeringValue == offSet){
                     std::cout << "TURNING RIGHT" << std::endl;
                     steeringValue = (offSet - RIGHT);
@@ -109,7 +113,7 @@ int main(int argc, char **argv) {
                 msgSteering.steeringAngle(steeringValue);
                 break;
 
-            case 'x': 
+            case 'x':
                 pedalValue = 0;
                 steeringValue = offSet;
                 msgPedal.percent(pedalValue);
@@ -119,7 +123,7 @@ int main(int argc, char **argv) {
                 exit(0);
                 break;
 
-            default:    
+            default:
                 pedalValue = 0;
                 steeringValue = offSet;
                 msgPedal.percent(pedalValue);

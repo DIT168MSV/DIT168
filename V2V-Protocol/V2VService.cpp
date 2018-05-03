@@ -1,17 +1,21 @@
 #include "V2VService.hpp"
+#include <cmath>
+#include <queue>
 
 std::shared_ptr<cluon::OD4Session> od4;
+std::queue <float> delayQueue;
 
 int main(int argc, char **argv) {
     int retCode{0};
     auto commandlineArguments = cluon::getCommandlineArguments(argc, argv);
     if (0 == commandlineArguments.count("cid") || 0 == commandlineArguments.count("freq") ||
         0 == commandlineArguments.count("ip") || 0 == commandlineArguments.count("id") ||
-        0 == commandlineArguments.count("left") || 0 == commandlineArguments.count("right")) {
+        0 == commandlineArguments.count("left") || 0 == commandlineArguments.count("right") ||
+        0 == commandlineArguments.count("speed") || 0 == commandlineArguments.count("queue")) {
         std::cerr << argv[0] << " sends and receives follower-/leader-status in accordance to the DIT168 V2V protocol." << std::endl;
         std::cerr << "Usage:   " << argv[0]
-                  << " --cid=<OD4Session components> --freq=<frequency> --ip=<onV2VNetwork> --id=<DIT168Group> --left=<Offset number for left turn> --right<Offset number for right turn>" << std::endl;
-        std::cerr << "Example: " << argv[0] << " --cid=191 --freq=8 --ip=172.20.10.10 --id=8 --left= 0.25 --right=0.20" << std::endl;
+                  << " --cid=<OD4Session components> --freq=<frequency> --ip=<onV2VNetwork> --id=<DIT168Group> --left=<Offset number for left turn> --right<Offset number for right turn> --speed=<Offset in speed for V2V --queue=<Number of max values in queue> " << std::endl;
+        std::cerr << "Example: " << argv[0] << " --cid=191 --freq=8 --ip=172.20.10.10 --id=8 --left= 0.20 --right=0.17 --speed=0.1 --queue=17" << std::endl;
         retCode = 1;
     } else {
         const uint16_t CID = (uint16_t) std::stoi(commandlineArguments["cid"]);
@@ -22,12 +26,13 @@ int main(int argc, char **argv) {
 
         const float leftOffset = std::stof(commandlineArguments["left"]);
         const float rightOffset = std::stof(commandlineArguments["right"]);
+        const float speedOffset = std::stof(commandlineArguments["speed"]);
+        const uint16_t queue = (uint16_t)std::stoi(commandlineArguments["queue"]);
     
         
-    std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>(IP, ID, leftOffset, rightOffset);
+    std::shared_ptr<V2VService> v2vService = std::make_shared<V2VService>(IP, ID, leftOffset, rightOffset, speedOffset, queue);
 
     float pedalPos = 0, steeringAngle = 0;
-    float v2vOffSet{0.13};
 
     od4 = std::make_shared<cluon::OD4Session>(CID,[&pedalPos, &steeringAngle](cluon::data::Envelope &&envelope) noexcept {
         if (envelope.dataType() == opendlv::proxy::GroundSteeringReading::ID()) {
@@ -93,16 +98,18 @@ int main(int argc, char **argv) {
                 break;
             }    
             case 5: {
-                auto sendLoop{[&msgLeaderStatus, &v2vService, &pedalPos, &steeringAngle, &v2vOffSet]() -> bool {
+                auto sendLoop{[&msgLeaderStatus, &v2vService, &pedalPos, &steeringAngle]() -> bool {
 
-                v2vService->leaderStatus(pedalPos, (steeringAngle - v2vOffSet), 100);
+                float roundAngle = (steeringAngle - 0.13f);
+                roundAngle = roundf(roundAngle * 100) / 100.0;
+                v2vService->leaderStatus(pedalPos, roundAngle, 100);
 
                 msgLeaderStatus.speed(pedalPos);
-                msgLeaderStatus.steeringAngle(steeringAngle);
+                msgLeaderStatus.steeringAngle(roundAngle);
                 msgLeaderStatus.distanceTraveled(100);
                 od4->send(msgLeaderStatus);
 
-                std::cout << "Sending leaderStatus with pedalposition: " << pedalPos << " and steeringangle: " << (steeringAngle - v2vOffSet) << std::endl;
+                std::cout << "Sending leaderStatus with pedalposition: " << pedalPos << " and steeringangle: " << (roundAngle) << std::endl;
 
                 return true;
                 }};
@@ -126,12 +133,15 @@ int main(int argc, char **argv) {
 /**
  * Implementation of the V2VService class as declared in V2VService.hpp
  */
-V2VService::V2VService(std::string ip, std::string id, float left, float right) {
+V2VService::V2VService(std::string ip, std::string id, float left, float right, float speed, uint16_t queue) {
     v2vIP = ip;
 	v2vID = id;
 	LEFT = left;
 	RIGHT = right;
-	float v2vOffSet{0.13};
+	SPEED = speed;
+	QUEUE = queue;
+
+	//const float v2vOffSet{0.13};
     /*
      * The broadcast field contains a reference to the broadcast channel which is an OD4Session. This is where
      * AnnouncePresence messages will be received.
@@ -161,7 +171,7 @@ V2VService::V2VService(std::string ip, std::string id, float left, float right) 
      */
     incoming =
         std::make_shared<cluon::UDPReceiver>("0.0.0.0", DEFAULT_PORT,
-           [this, &v2vOffSet](std::string &&data, std::string &&sender, std::chrono::system_clock::time_point &&ts) noexcept {
+           [this](std::string &&data, std::string &&sender, std::chrono::system_clock::time_point &&ts) noexcept {
                std::cout << "[UDP] ";
                std::pair<int16_t, std::string> msg = extract(data);
 
@@ -227,21 +237,32 @@ V2VService::V2VService(std::string ip, std::string id, float left, float right) 
                       	opendlv::proxy::GroundSteeringReading msgSteering;
     					opendlv::proxy::PedalPositionReading msgPedal;
 
+    					msgPedal.percent(leaderStatus.speed() - SPEED);
+    					od4->send(msgPedal);
+
+    					float calibratedAngle;
+
     					if(leaderStatus.steeringAngle() == 0){
-    						msgSteering.steeringAngle(v2vOffSet);
+    						calibratedAngle = 0.13f;
     					}
     					else if(leaderStatus.steeringAngle() > 0){
-    						msgSteering.steeringAngle(v2vOffSet + LEFT + leaderStatus.steeringAngle());
+    						calibratedAngle = 0.13f + LEFT + leaderStatus.steeringAngle();
     					}
     					else{
-    						msgSteering.steeringAngle(v2vOffSet + RIGHT + leaderStatus.steeringAngle());
+    						calibratedAngle = 0.13f + RIGHT + leaderStatus.steeringAngle();
     					}
 
-                       	msgPedal.percent(leaderStatus.speed());
 
-                       	od4->send(msgSteering);
-                       	od4->send(msgPedal);
+    					if(leaderStatus.speed() != 0 && delayQueue.size() < QUEUE){
+    						delayQueue.push(calibratedAngle);
+    					}
+    					else if(leaderStatus.speed() != 0 && delayQueue.size() >= QUEUE){
+    						delayQueue.push(calibratedAngle);
 
+    						msgSteering.steeringAngle(delayQueue.front());
+    						od4->send(msgSteering);
+    						delayQueue.pop();
+    					}
                        break;
                    }
                    default: std::cout << "¯\\_(ツ)_/¯" << std::endl;

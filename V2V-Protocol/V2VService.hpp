@@ -34,7 +34,7 @@ class V2VService {
 public:
     std::map <std::string, std::string> presentCars;
 
-    V2VService(std::string ip, std::string id);
+    V2VService(std::string ip, std::string id, float left, float right);
 
     void announcePresence();
     void followRequest(std::string vehicleIp);
@@ -46,6 +46,9 @@ public:
 private:
     std::string v2vIP;
     std::string v2vID;
+
+    float LEFT;
+    float RIGHT;
     
     std::string leaderIp;
     std::string followerIp;

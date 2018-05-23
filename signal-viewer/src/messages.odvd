@@ -1,0 +1,166 @@
+/*
+ * Copyright (C) 2018 Chalmers Revere
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+message opendlv.body.SensorInfo [id = 1023] {
+  string description [id = 1];
+  float x [id = 2];
+  float y [id = 3];
+  float z [id = 4];
+  uint32 signalId [id = 5];
+  float accuracyStd [id = 6];
+  ustring minFrequency [id = 7];
+}
+
+message opendlv.body.SignalInfo [id = 1024] {
+  string description [id = 1];
+  uint32 signalId [id = 2];
+  float accuracyStd [id = 3];
+  ustring minFrequency [id = 4];
+}
+
+message opendlv.proxy.AccelerationReading [id = 1030] {
+  float accelerationX [id = 1];
+  float accelerationY [id = 2];
+  float accelerationZ [id = 3];
+}
+
+message opendlv.proxy.AngularVelocityReading [id = 1031] {
+  float angularVelocityX [id = 1];
+  float angularVelocityY [id = 2];
+  float angularVelocityZ [id = 3];
+}
+
+message opendlv.proxy.MagneticFieldReading [id = 1032] {
+  float magneticFieldX [id = 1];
+  float magneticFieldY [id = 2];
+  float magneticFieldZ [id = 3];
+}
+
+message opendlv.proxy.AltitudeReading [id = 1033] {
+  float altitude [id = 1];
+}
+
+message opendlv.proxy.PressureReading [id = 1034] {
+  float pressure [id = 1];
+}
+
+message opendlv.proxy.TemperatureReading [id = 1035] {
+  float temperature [id = 1];
+}
+
+message opendlv.proxy.TorqueReading [id = 1036] {
+  float torque [id = 1];
+}
+
+message opendlv.proxy.VoltageReading [id = 1037] {
+  float torque [id = 1];
+}
+
+message opendlv.proxy.AngleReading [id = 1038] {
+  float angle [id = 1];
+}
+
+message opendlv.proxy.DistanceReading [id = 1039] {
+  float distance [id = 1];
+}
+
+message opendlv.proxy.SwitchStateReading [id = 1040] {
+  string state [id = 1];
+}
+
+message opendlv.proxy.PedalPositionReading [id = 1041] {
+  float percent [id = 1];
+}
+
+message opendlv.proxy.GroundSteeringReading [id = 1045] {
+  float steeringAngle [id = 1];
+}
+
+message opendlv.proxy.GroundSpeedReading [id = 1046] {
+  float groundSpeed [id = 1];
+}
+
+message opendlv.proxy.WeightReading [id = 1050] {
+  float torque [id = 1];
+}
+
+message opendlv.proxy.GeodeticHeadingReading [id = 1051] {
+  float northHeading [id = 1];
+}
+
+message opendlv.proxy.GeodeticWgs84Reading [id = 19] {
+  double latitude [id = 1];
+  double longitude [id = 3];
+}
+
+// opendlv.proxy.ImageReading [id = ]
+
+message opendlv.proxy.ImageReadingShared [id = 14] {
+    string name [id = 1];
+    uint32 size [id = 2];
+    uint32 width [id = 3];
+    uint32 height [id = 4];
+    uint32 bytesPerPixel [id = 5];
+}
+
+message opendlv.proxy.PointCloudReading [id = 49] {
+  float startAzimuth [id = 1];
+  float endAzimuth [id = 2];
+  uint8 entriesPerAzimuth [id = 3];
+  bytes distances [id = 4];
+  uint8 numberOfBitsForIntensity [id = 5];
+}
+
+message opendlv.proxy.PointCloudReadingShared [id = 28] {
+  string name [id = 1];
+  uint32 size [id = 2];
+  uint32 width [id = 3];
+  uint32 height [id = 4];
+  uint8 numberOfComponentsPerPoint [id = 5];
+}
+
+// V2xReading?
+
+
+message AnnouncePresence [id = 1001] {
+  string vehicleIp [id = 1];
+  string groupId [id = 3];
+}
+
+message FollowRequest [id = 1002] {
+  uint16 state [id = 1];
+}
+
+message FollowResponse [id = 1003] {
+  uint16 state [id = 1];
+}
+
+message StopFollow [id = 1004] {
+  uint16 state [id = 1];
+}
+
+message LeaderStatus [id = 2001] {
+  uint32 timestamp [id = 1];
+  float speed [id = 2];
+  float steeringAngle [id = 3];
+  uint8 distanceTraveled [id = 4];
+}
+
+message FollowerStatus [id = 3001] {
+  uint16 state [id = 1];
+}

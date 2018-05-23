@@ -1,0 +1,96 @@
+
+#v2v{
+
+  width: 350px;
+  height: 500px;
+  overflow: auto;
+  color: darkmagenta;
+  background-color: #ffc890; 
+}
+span.dots {
+  color: gray;
+}
+
+table#dataView {
+  width: 25%;
+}
+
+table.dataFields {
+  padding-left: 5em;
+}
+
+tr.hidden {
+  visibility:collapse;
+}
+
+tr.warning {
+  background-color: #ffc890;
+}
+
+th.signal-type {
+  min-width: 20px;
+
+}
+
+th.signal-sender {
+  min-width: 25px;
+}
+
+th.signal-name {
+}
+
+th.signal-frequency {
+  min-width: 25px;
+}
+
+th.signal-timestamp {
+  min-width: 80px;
+}
+
+td.field-name {
+  min-width: 150px;
+}
+
+td.field-plot {
+  min-width: 300px;
+}
+
+td.field-value {
+}
+.center{
+  text-align: center;
+}
+
+.flexContainer {
+  display: flex;
+}
+.flexSpaceAround {
+  justify-content: space-around;
+}
+
+.monk {
+  width: 90%;
+  border: 10px solid #777777;
+  border-radius: 10px;
+  background: rgb(172, 158, 158);
+  padding: 10px;
+  overflow-y: scroll;
+  overflow-x:hidden;
+
+}
+.fullHeight {
+  height: 80vh;
+}
+.whiteBackground {
+  background: rgb(191, 207, 207);
+}
+.flexItem {
+  flex: 1;
+}
+
+
+
+
+
+
+

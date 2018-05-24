@@ -10,7 +10,7 @@ before_install:
   - sudo apt-get -y install docker-ce
 
 script:
-  - docker build -t dit168.travis-armhf -f Dockerfile .
+  - docker build -t dit168.travis -f Dockerfile .
   - docker build -t dit168.travis-armhf -f Dockerfile.armhf .
 
 after_success:

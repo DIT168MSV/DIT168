@@ -6,13 +6,14 @@
 
 DIT168
 ======
-Industrial IT and Embedded Systems project
+Industrial IT and Embedded Systems project partial fulfillment of Bsc Software engineering & management 2018
 
 ## About this project
 
-In this project we are developing a miniature smart vehicle
-- The deployment and packaging  is docker based.
-- It should be able to communicate with other smart vehicles from other groups in this course.
+In this project we are developing a miniature smart vehicle.
+- The packaging and deployment of images with excutable binaries is done using docker.
+- Miniature Car be able to communicate with other smart vehicles through V2V protocal.
+- Emergency collision avoidance and Visualisation of exchange messages.
 
 ## Getting Started
 
@@ -28,7 +29,7 @@ git clone https://github.com/DIT168MSV/DIT168.git
 
 ## Building and running the program
 
-1. Make a new directory in the src folder called build:
+1. Make a new directory into folderr of module you want to run: e.g
 
 ```
 cd src
@@ -38,31 +39,66 @@ mkdir build
 ```
 cd build
 ```
-3. Call cmake to set up the automated compiling:
+3. Type 'cmake' to set up the automated compiling:
 ```
 cmake ..
 ```
-4. Call make to build and compile the program:
+4. Type 'make' to build and compile the program:
 ```
 make
 ```
-5. Run the receiver cxx:
+5. Run the modules locally as follows in the case of Remote control :
 ```
-./dit168.Receiver
+ ./MSV.RC --right=0.65 --left=0.6
 ```
-6. Open a new terminal window, navigate to your build folder, and run the sender cxx:
+6. Open a new terminal window, navigate to your build folder, and run the MSV.Main:
 ```
-./dit168.Sender
+./MSV.Main
 ```
-7. Test the program communication by using sender to send numbers to the receiver.
+7. This procedure can be performed for all the directories on the repository.
 
 ### Docker build
 
-Docker build should be built from outside the source folder:
+Build docker images from outside the source folder till example one to run locally on x86_64 and armhf platforms respectively.
 ```
-docker build -t dit168.local -f src/Dockerfile .
-docker build -t dit168.local-armhf -f src/Dockerfile.armhf .
+docker build -t dit168.local -f Dockerfile .
+docker build -t dit168.local-armhf -f Dockerfile.armhf .
+
+**These images can be  as containers by running 
+
 ```
+docker save dit168.local > dit168.local.tar
+cat dit168.local.tar | docker load`
+
+```
+```
+Otherwise we can build separate images for the modules using a python script ' automake-arm.sh' in oder to build and cross-compile the images into the miniature car and load the containers there.
+```
+cd src
+automake-arm.sh
+
+cd V2V-Protocal
+automake-arm.sh
+```
+### Docker run
+In oder to run the docker containers use the script below;
+```
+docker run
+    OR
+ from our example codes of containers see below how to run
+
+ docker run --rm -ti --net=host signal-viewer:latest --cid=191
+ docker run --rm -ti --net=host autobuild:armhf
+ docker run --rm -ti --net=host v2v_autobuild:armhf
+
+```
+Lastly make sure that these containers are stop or down if docker compose was used.
+```
+docker ps
+docker stop <container id>
+
+```
+
 
 ## Github layout
 

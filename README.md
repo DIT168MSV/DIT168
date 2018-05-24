@@ -97,16 +97,14 @@ docker run
 ```
 Lastly make sure that these containers are stop or down if docker compose was used.
 ```
-docker ps
-docker stop <container id>
+`$ docker ps`\
+`$ docker stop <container id>`
 
 ```
-
-
 ## Github layout
 
 - We have a master branch were we will add code when we tested it and made sure it follows our quality standards.
-- We have a development branch for testing, debugging and implementation of new features. In this branch we perform pull request to make sure code quality is high in the branch.
+- We have a development branch for testing, debugging and implementation of new features. In this branch we perform pull request to make sure code quality is high in the branch. 
 
 ## License
 

@@ -100,7 +100,7 @@ Lastly make sure that these containers are stop or down if docker compose was us
 `$ docker ps`\
 `$ docker stop <container id>`
 
-```
+``
 ## Github layout
 
 - We have a master branch were we will add code when we tested it and made sure it follows our quality standards.

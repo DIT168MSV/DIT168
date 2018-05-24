@@ -31,9 +31,10 @@ int main(int argc, char **argv) {
     std::cout << "  Group 8 RemoteControl" << std::endl;
     std::cout << "                       " << std::endl;
     std::cout << "      Keys to use      " << std::endl;
-    std::cout << "           w           " << std::endl;
-    std::cout << "    a             d    " << std::endl;
-    std::cout << "           s           " << std::endl;
+    std::cout << "        w       r      " << std::endl;
+    std::cout << "    a         d        " << std::endl;
+    std::cout << "          s            " << std::endl;
+    std::cout << "             x         " << std::endl;
     std::cout << "                       " << std::endl;
 
 	while (1) {

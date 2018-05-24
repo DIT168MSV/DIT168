@@ -60,15 +60,18 @@ make
 ### Docker build
 
 Build docker images from outside the source folder till example one to run locally on x86_64 and armhf platforms respectively.
-```
-docker build -t dit168.local -f Dockerfile .
-docker build -t dit168.local-armhf -f Dockerfile.armhf .
 
-**These images can be  as containers by running 
+``
+`$ docker build -t dit168.local -f Dockerfile .`\
 
-```
-docker save dit168.local > dit168.local.tar
-cat dit168.local.tar | docker load`
+`$ docker build -t dit168.local-armhf -f Dockerfile.armhf .`\
+
+**These images can be  save and loaded by running ----
+
+``
+`$ docker save dit168.local > dit168.local.tar`\
+
+`$ cat dit168.local.tar | docker load`
 
 ```
 ```
@@ -80,16 +83,16 @@ automake-arm.sh
 cd V2V-Protocal
 automake-arm.sh
 ```
-### Docker run
+#### Docker run
 In oder to run the docker containers use the script below;
 ```
 docker run
     OR
- from our example codes of containers see below how to run
-
- docker run --rm -ti --net=host signal-viewer:latest --cid=191
- docker run --rm -ti --net=host autobuild:armhf
- docker run --rm -ti --net=host v2v_autobuild:armhf
+ From our example codes of containers see below how to run
+```
+ `$ docker run --rm -ti --net=host signal-viewer:latest --cid=191`\
+ `$ docker run --rm -ti --net=host autobuild:armhf`\
+ `$ docker run --rm -ti --net=host v2v_autobuild:armhf`
 
 ```
 Lastly make sure that these containers are stop or down if docker compose was used.
